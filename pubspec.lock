@@ -150,7 +150,7 @@ packages:
   reef_chain_flutter:
     dependency: "direct main"
     description:
-      path: "/Users/mac02/reef/reef-chain-flutter"
+      path: "/Users/anukul/Desktop/reef-chain-flutter"
       relative: false
     source: path
     version: "0.0.2"

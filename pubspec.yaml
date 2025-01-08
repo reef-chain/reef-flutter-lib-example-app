@@ -37,7 +37,7 @@ dependencies:
   webview_flutter: ^4.10.0
   rxdart: ^0.28.0
   reef_chain_flutter:
-    path: /Users/mac02/reef/reef-chain-flutter
+    path: /Users/anukul/Desktop/reef-chain-flutter
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +64,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
 # test if this works when lib is publised
-#    - packages/reef_chain_flutter/lib/js/packages/reef-mobile-js/dist/index.js
+  #  - packages/reef_chain_flutter/lib/js/packages/reef-mobile-js/dist/index.js
     - lib/js/packages/reef-mobile-js/dist/index.js
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
