@@ -84,6 +84,11 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint("getPoolReserves===$val");
     });
 
+    // generateAccount
+    widget.reefChain.reefState.accountApi.generateAccount().then((val){
+      debugPrint("generateAccount===$val");
+    });
+
 
     setState(() {
       _counter++;
