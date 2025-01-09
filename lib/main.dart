@@ -28,13 +28,12 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
-  final JsApiService reefJsApiService = JsApiService.reefAppJsApi(onErrorCb: (){
+  final JsApiService reefJsApiService =
+      JsApiService.reefAppJsApi(onErrorCb: () {
     debugPrint('JS CONNECTION ERRORORRRRR - RESET');
   });
 
   final ReefChainApi reefChain = ReefChainApi();
-
 
   MyHomePage({super.key, required this.title});
   final String title;
@@ -45,50 +44,41 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String jsResult = "";
 
-  void _incrementCounter() async {
-    widget.reefJsApiService.jsCall("window.isJsConn()").then((v)=>debugPrint(v.toString()));
-    widget.reefJsApiService.jsCall("window.getReefJsVer()").then((v)=>debugPrint(v.toString()));
+  void _initReef() async {
+    widget.reefJsApiService
+        .jsCall("window.isJsConn()")
+        .then((v) => debugPrint(v.toString()));
     // widget.reefJsApiService.jsCall("window.test()").then((v)=>debugPrint(v.toString()));
-    widget.reefJsApiService.jsPromise("window.futureFn(\"fltrrr\")").then((v)=>debugPrint(v.toString()));
+    widget.reefJsApiService
+        .jsPromise("window.futureFn(\"fltrrr\")")
+        .then((v) => debugPrint(v.toString()));
     // widget.reefJsApiService.jsObservable("window.testObs()").listen((v)=>debugPrint(v.toString()));
 
-    await widget.reefChain.reefState.init(ReefNetowrk.testnet,[
-      ReefAccount('name_acc1', '5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP', true)
+    await widget.reefChain.reefState.init(ReefNetowrk.testnet, [
+      ReefAccount(
+          'name_acc1', '5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP', true)
     ]);
 
 
-    // logs tokens
-    widget.reefChain.reefState.tokenApi.tokens.listen((v){
-      var len = v.data.length.toString();
-      debugPrint("tokens len=$len");
-    });
-
-     // logs pools
-    widget.reefChain.reefState.poolsApi.fetchPools().then((val){
-      debugPrint("pools===$val");
-    });
-
-    // logs network
-    widget.reefChain.reefState.networkApi.selectedNetwork().listen((val){
-      debugPrint("selectedNetwork===$val");
-    });
-
     // logs currencies from stealthex
-    widget.reefChain.reefState.stealthexApi.listCurrencies().then((val){
+    widget.reefChain.reefState.stealthexApi.listCurrencies().then((val) {
       debugPrint("listCurrencies===$val");
     });
 
     // logs pool reserves
-    widget.reefChain.reefState.swapApi.getPoolReserves("0x70A82e21ec223c8691a0e44BEDC4790976Ea530c","0x0000000000000000000000000000000001000000").then((val){
+    widget.reefChain.reefState.swapApi
+        .getPoolReserves("0x70A82e21ec223c8691a0e44BEDC4790976Ea530c",
+            "0x0000000000000000000000000000000001000000")
+        .then((val) {
       debugPrint("getPoolReserves===$val");
     });
 
     // generateAccount
-    widget.reefChain.reefState.accountApi.generateAccount().then((val){
+    widget.reefChain.reefState.accountApi.generateAccount().then((val) {
       debugPrint("generateAccount===$val");
     });
-
 
     setState(() {
       _counter++;
@@ -102,25 +92,68 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            if(jsResult.length>0)Text("${jsResult.toString()}"),
+            ElevatedButton(onPressed: _initReef, child: Text("init Reef")),
+            ElevatedButton(
+                onPressed: () {
+                  widget.reefJsApiService
+                      .jsCall("window.getReefJsVer()")
+                      .then((v) {
+                        setState(() {
+                          jsResult=v.toString();
+                        });
+                      });
+                },
+                child: Text("get reef.js version")),
+        
+            ElevatedButton(
+                onPressed: () {
+                  // logs tokens
+                  widget.reefChain.reefState.tokenApi.tokens.listen((v) {
+                    var len = v.data.length.toString();
+                    setState(() {
+                      jsResult=v.data.toString();
+                    });
+                    debugPrint("tokens len=${v.data}");
+                  });
+                },
+                child: Text("Get Tokens")),
+            ElevatedButton(
+                onPressed: () {
+                     // logs pools
+                    widget.reefChain.reefState.poolsApi.fetchPools().then((val) {
+                      setState(() {
+                        jsResult=val.toString();
+                      });
+                      debugPrint("pools===$val");
+                    });
+                },
+                child: Text("Get Pools")),
+            ElevatedButton(
+                onPressed: () {
+                  // logs network
+                  widget.reefChain.reefState.networkApi.selectedNetwork().listen((val) {
+                    setState(() {
+                      jsResult=val.toString();
+                    });
+                    debugPrint("selectedNetwork===$val");
+                  });
+                },
+                child: Text("Get Selected Network")),
+            
             // widget.reefJsApiService.widget,
-            const Text(
-              'test js integration',
-            ),
+            // const Text(
+            //   'test js integration',
+            // ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
