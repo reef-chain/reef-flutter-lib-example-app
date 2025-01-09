@@ -313,6 +313,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       },
                       child: Text("List Currencies")),
+                  ElevatedButton(
+                      onPressed: () {
+                            // logs currencies from stealthex
+                    widget.reefChain.reefState.accountApi.formatBalance("121121121121121121121",3).then((val) {
+                      setState(() {
+                        jsResult=val.toString();
+                      });
+                      debugPrint("formatBalance===$val");
+                    });
+
+                      },
+                      child: Text("Format Balance")),
 
                   // widget.reefJsApiService.widget,
                   // const Text(
