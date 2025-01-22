@@ -54,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
       debugPrint("isJsConn error: $e");
     }*/
 
+    reefChain.ready.future.then((_)=>debugPrint("reefChainApi READYYYY"));
+    await reefChain.ready.future;
+
     reefChain.reefState.accountApi.accountsStatus$.listen((val) {
       setState(() {
         accounts = (val['data'] as List).map((acc) =>
@@ -66,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedAccount = selected;
       });
     });
+
 
     try {
       await reefChain.reefState.init(ReefNetowrk.mainnet, accounts);
