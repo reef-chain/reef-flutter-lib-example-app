@@ -133,8 +133,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: isInitialized
-              ? ListView.builder(
+          child: 
+          // isInitialized
+          //     ? 
+              ListView.builder(
                   itemCount: accounts.length,
                   itemBuilder: (context, index) {
                     final account = accounts[index];
@@ -162,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   },
                 )
-              : const CircularProgressIndicator(color: Colors.purple),
+              // : const CircularProgressIndicator(color: Colors.purple),
         ),
       ),
     );
