@@ -35,9 +35,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final JsApiService reefJsApiService = JsApiService.reefAppJsApi(onErrorCb: () {
+  /*final JsApiService reefJsApiService = JsApiService.reefAppJsApi(onErrorCb: () {
     debugPrint('JS CONNECTION ERROR - RESET');
-  });
+  });*/
   final ReefChainApi reefChain = ReefChainApi();
 
   bool isInitialized = false;
@@ -47,22 +47,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String? selectedAccount;
 
   void _initReef() async {
-    try {
-      await reefJsApiService.jsCall("window.isJsConn()");
+   /* try {
+      // await reefJsApiService.jsCall("window.isJsConn()");
+      await reefChain.reefState.metadataApi.isJsConn();
     } catch (e) {
       debugPrint("isJsConn error: $e");
-    }
-
-    try {
-      await reefChain.reefState.init(ReefNetowrk.mainnet, accounts);
-    } catch (e) {
-      debugPrint("init error: $e");
-    }
+    }*/
 
     reefChain.reefState.accountApi.accountsStatus$.listen((val) {
       setState(() {
         accounts = (val['data'] as List).map((acc) =>
-          ReefAccount(acc['data']['name'], acc['data']['address'], acc['data']['isEvmClaimed'])).toList();
+            ReefAccount(acc['data']['name'], acc['data']['address'], acc['data']['isEvmClaimed'])).toList();
       });
     });
 
@@ -72,6 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
+    try {
+      await reefChain.reefState.init(ReefNetowrk.mainnet, accounts);
+    } catch (e) {
+      debugPrint("init error: $e");
+    }
+
+
     setState(() {
       isInitialized = true;
     });
@@ -80,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 4), _initReef);
+    // Future.delayed(const Duration(seconds: 4), _initReef);
+    _initReef();
   }
 
   @override
